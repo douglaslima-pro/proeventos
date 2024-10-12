@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>EventoId</th>
+      <th>Local</th>
+      <th>DataEvento</th>
+      <th>Tema</th>
+      <th>QtdPessoas</th>
+      <th>Lote</th>
+      <th>ImagemURL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let evento of eventos">
+      <td>{{evento.eventoId}}</td>
+      <td>{{evento.local}}</td>
+      <td>{{evento.dataEvento}}</td>
+      <td>{{evento.tema}}</td>
+      <td>{{evento.qtdPessoas}}</td>
+      <td>{{evento.lote}}</td>
+      <td>{{evento.imagemURL}}</td>
+    </tr>
+  </tbody>
+</table>
