@@ -24,16 +24,28 @@ namespace ProEventos.API.Controllers
             this.context = context;
         }
 
-        [HttpPut("{id}")]
-        public string Put(int id)
+        [HttpGet]
+        public IEnumerable<Evento> GetAll()
         {
             return context.Eventos;
         }
 
-        [HttpDelete("{id}")]
-        public string Delete(int id)
+        [HttpGet("{id}")]
+        public Evento Get(int id)
         {
-            return context.Eventos.Where(evento => evento.EventoId == id).FirstOrDefault();
+            return context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
+        }
+
+        [HttpPut("{id}")]
+        public Evento Put(int id)
+        {
+            return context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
+        }
+
+        [HttpDelete("{id}")]
+        public Evento Delete(int id)
+        {
+            return context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
         }
 
     }
