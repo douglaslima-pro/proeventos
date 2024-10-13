@@ -8,7 +8,11 @@ import { HttpClient } from '@angular/common/http'
 })
 export class EventosComponent implements OnInit {
 
-  public eventos: any
+  public eventos: any = []
+  public eventosFiltrados: any = []
+  public imgWidth: number = 150
+  public isImgCollapsed: boolean = false
+  private _filtroLista: string = ''
 
   constructor(private http: HttpClient) { }
 
@@ -16,13 +20,35 @@ export class EventosComponent implements OnInit {
     this.getEventos()
   }
 
+  public get filtroLista(): string {
+    return this._filtroLista;
+  }
+
+  public set filtroLista(filtroLista: string) {
+    this._filtroLista = filtroLista;
+    this.eventosFiltrados = this._filtroLista ? this.filtrarEventos(filtroLista) : this.eventos
+  }
+
+  public filtrarEventos(filtroLista: string): any {
+    return this.eventos.filter(
+        (evento: {tema: string; }) => evento.tema.toLocaleLowerCase().indexOf(filtroLista.toLocaleLowerCase()) !== -1
+    )
+  }
+
   public getEventos(): any {
-    this.eventos = this.http
+    this.http
       .get('https://localhost:5001/api/Evento')
       .subscribe(
-        response => this.eventos = response,
+        response => {
+          this.eventos = response
+          this.eventosFiltrados = response
+        },
         error => console.log(error)
       )
+  }
+
+  public toggleIsImgCollapsed(): void {
+    this.isImgCollapsed = !this.isImgCollapsed
   }
 
 }
