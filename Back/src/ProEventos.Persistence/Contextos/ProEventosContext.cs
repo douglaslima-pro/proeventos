@@ -2,7 +2,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain;
 
-namespace ProEventos.Persistence
+namespace ProEventos.Persistence.Contextos
 {
 
     public class ProEventosContext : DbContext
@@ -18,7 +18,7 @@ namespace ProEventos.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PalestranteEvento>()
-                .HasKey(pe => new { pe.PalestranteId, pe.EventoId }); // cria uma chave primária composta
+                .HasKey(pe => new { pe.Id, pe.EventoId }); // cria uma chave primária composta
         }
 
     }

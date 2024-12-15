@@ -2,9 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ProEventos.Application.Contratos;
+using ProEventos.Application.Exceptions;
 using ProEventos.Domain;
 using ProEventos.Persistence;
 
@@ -15,35 +19,119 @@ namespace ProEventos.API.Controllers
     public class EventoController : ControllerBase
     {
 
-        public ProEventosContext context;
+        public IEventoService _eventoService;
 
-        public EventoController(ProEventosContext context)
+        public EventoController(IEventoService eventoService)
         {
-            this.context = context;
+            _eventoService = eventoService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Insert(Evento model)
+        {
+            try
+            {
+                Evento evento = await _eventoService.Add(model);
+                if (evento != null)
+                {
+                    return Created($"{Request.Path}/{evento.Id}", evento);
+                }
+                return BadRequest("Não foi possível inserir no banco de dados!");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+            }
         }
 
         [HttpGet]
-        public IEnumerable<Evento> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return context.Eventos;
+            try
+            {
+                Evento[] eventos = await _eventoService.GetAllEventosAsync(true);
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+            }
         }
 
         [HttpGet("{id}")]
-        public Evento Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
+            try
+            {
+                Evento evento = await _eventoService.GetEventoByIdAsync(id);
+                return Ok(evento);
+            }
+            catch (EventoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+            }
+        }
+
+        [HttpGet("tema/{tema}")]
+        public async Task<IActionResult> GetByTema(string tema)
+        {
+            try
+            {
+                Evento[] eventos = await _eventoService.GetAllEventosByTemaAsync(tema, true);
+                return Ok(eventos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public Evento Put(int id)
+        public async Task<IActionResult> Update(int id, Evento model)
         {
-            return context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
+            try
+            {
+                Evento evento = await _eventoService.Update(id, model);
+                if (evento != null)
+                {
+                    return Ok(evento);
+                }
+                return BadRequest("Não foi possível atualizar no banco de dados!");
+            }
+            catch (EventoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
-        public Evento Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
+            try
+            {
+                bool resultado = await _eventoService.Delete(id);
+                if (resultado)
+                {
+                    return NoContent();
+                }
+                return BadRequest("Não foi possível excluir no banco de dados!");
+            }
+            catch (EventoNaoEncontradoException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+            }
         }
 
     }

@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProEventos.Persistence;
+using ProEventos.Persistence.Contextos;
 
 namespace ProEventos.Persistence.Migrations
 {
     [DbContext(typeof(ProEventosContext))]
-    [Migration("20241028181158_Initial")]
+    [Migration("20241215173247_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace ProEventos.Persistence.Migrations
 
             modelBuilder.Entity("ProEventos.Domain.Evento", b =>
                 {
-                    b.Property<int>("EventoId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -45,7 +45,7 @@ namespace ProEventos.Persistence.Migrations
                     b.Property<string>("Tema")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("EventoId");
+                    b.HasKey("Id");
 
                     b.ToTable("Eventos");
                 });
@@ -109,15 +109,20 @@ namespace ProEventos.Persistence.Migrations
 
             modelBuilder.Entity("ProEventos.Domain.PalestranteEvento", b =>
                 {
-                    b.Property<int>("PalestranteId")
+                    b.Property<int>("Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("EventoId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("PalestranteId", "EventoId");
+                    b.Property<int?>("PalestranteId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id", "EventoId");
 
                     b.HasIndex("EventoId");
+
+                    b.HasIndex("PalestranteId");
 
                     b.ToTable("PalestrantesEventos");
                 });
@@ -170,9 +175,7 @@ namespace ProEventos.Persistence.Migrations
 
                     b.HasOne("ProEventos.Domain.Palestrante", "Palestrante")
                         .WithMany("Eventos")
-                        .HasForeignKey("PalestranteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PalestranteId");
 
                     b.Navigation("Evento");
 
