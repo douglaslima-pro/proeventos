@@ -40,7 +40,7 @@ namespace ProEventos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -54,7 +54,7 @@ namespace ProEventos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -63,7 +63,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                Evento evento = await _eventoService.GetEventoByIdAsync(id);
+                Evento evento = await _eventoService.GetEventoByIdAsync(id, true);
                 return Ok(evento);
             }
             catch (EventoNaoEncontradoException ex)
@@ -72,7 +72,7 @@ namespace ProEventos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -86,7 +86,7 @@ namespace ProEventos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -108,7 +108,7 @@ namespace ProEventos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -130,7 +130,7 @@ namespace ProEventos.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Não foi possível concluir a operação! Erro: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 

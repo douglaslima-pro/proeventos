@@ -19,6 +19,16 @@ namespace ProEventos.Persistence.Contextos
         {
             modelBuilder.Entity<PalestranteEvento>()
                 .HasKey(pe => new { pe.Id, pe.EventoId }); // cria uma chave primária composta
+
+            modelBuilder.Entity<Evento>()
+                .HasMany(e => e.RedesSociais)
+                .WithOne(r => r.Evento)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Palestrante>()
+                .HasMany(p =>  p.RedesSociais)
+                .WithOne(r => r.Palestrante)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

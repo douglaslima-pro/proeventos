@@ -8,7 +8,7 @@ namespace ProEventos.Application.Exceptions
 {
     public class EventoNaoEncontradoException : Exception
     {
-        public EventoNaoEncontradoException() { }
+        public EventoNaoEncontradoException() : base() { }
         public EventoNaoEncontradoException(string message) : base(message) { }
         public EventoNaoEncontradoException(string message, Exception inner) : base(message, inner) { }
     }

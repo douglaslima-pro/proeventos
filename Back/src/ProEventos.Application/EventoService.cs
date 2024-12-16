@@ -22,13 +22,13 @@ namespace ProEventos.Application
                 _eventoPersistence.Add(model);
                 if (await _eventoPersistence.SaveChangesAsync())
                 {
-                    return await _eventoPersistence.GetEventoByIdAsync(model.Id);
+                    return await _eventoPersistence.GetEventoByIdAsync(model.Id, true);
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Não foi possível concluir a operação. Erro: {ex.Message}");
             }
         }
 
@@ -45,13 +45,17 @@ namespace ProEventos.Application
                 _eventoPersistence.Update(model);
                 if (await _eventoPersistence.SaveChangesAsync())
                 {
-                    return await _eventoPersistence.GetEventoByIdAsync(eventoId);
+                    return await _eventoPersistence.GetEventoByIdAsync(eventoId, true);
                 }
                 return null;
             }
+            catch (EventoNaoEncontradoException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Não foi possível concluir a operação. Erro: {ex.Message}");
             }
         }
 
@@ -59,7 +63,7 @@ namespace ProEventos.Application
         {
             try
             {
-                Evento evento = await _eventoPersistence.GetEventoByIdAsync(eventoId);
+                Evento evento = await _eventoPersistence.GetEventoByIdAsync(eventoId, true);
                 if (evento == null)
                 {
                     throw new EventoNaoEncontradoException("Evento não encontrado!");
@@ -67,9 +71,13 @@ namespace ProEventos.Application
                 _eventoPersistence.Delete(evento);
                 return await _eventoPersistence.SaveChangesAsync();
             }
+            catch (EventoNaoEncontradoException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Não foi possível concluir a operação. Erro: {ex.Message}");
             }
         }
 
@@ -82,7 +90,7 @@ namespace ProEventos.Application
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Não foi possível concluir a operação. Erro: {ex.Message}");
             }
         }
 
@@ -95,7 +103,7 @@ namespace ProEventos.Application
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Não foi possível concluir a operação. Erro: {ex.Message}");
             }
         }
 
@@ -110,9 +118,13 @@ namespace ProEventos.Application
                 }
                 return evento;
             }
+            catch (EventoNaoEncontradoException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception($"Não foi possível concluir a operação. Erro: {ex.Message}");
             }
         }
     }
